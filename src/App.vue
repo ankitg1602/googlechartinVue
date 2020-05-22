@@ -1,19 +1,47 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <select v-model="selected" @change="onSelect">
+      <option
+        v-for="option in options"
+        v-bind:value="option.value"
+        :key="option.value"
+      >
+        {{ option.text }}
+      </option>
+    </select>
+    <h4 :style="{ textAlign: 'left', marginLeft: '40px' }">{{ selected }}</h4>
+    <Chart :data="$store.getters.chartData" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Chart from "./components/Chart.vue";
 
 export default {
-  name: 'App',
+  data() {
+    return {
+      selected: "sales",
+      options: [
+        { text: "Overall Sales", value: "sales" },
+        { text: "Overall Orders", value: "orders" },
+        { text: "Rate", value: "clickThruRate" },
+        { text: "Page Views", value: "pageViews" },
+      ],
+    };
+  },
+  methods: {
+    onSelect() {
+      this.$store.dispatch("ACTION_CHART_DATA", this.selected);
+    },
+  },
+  created() {
+    this.$store.dispatch("ACTION_CHART_DATA", this.selected);
+  },
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Chart,
+  },
+};
 </script>
 
 <style>
